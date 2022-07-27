@@ -12,7 +12,8 @@ def MetabolitesPage(mb_url_t):
 def getAllMetabolites(metabolitespage):
     mb_regex = re.compile("MULTIPLE></td>[a-zA-Z0-9_()-±+',_\[\]α-ωΑ-Ω\s]*?</td>", re.DOTALL | re.M) #this is the best I can came up with so far that can find all metabolites
     mb_test = mb_regex.findall(metabolitespage)
-    mb_test = [i.lstrip('MULTIPLE></td><td>').split('</td>')[0] for i in mb_test]
+    mb_test = [a.replace('MULTIPLE></td><td>', '') for a in mb_test]
+    mb_test = [a.replace('</td>', '') for a in mb_test]
     return mb_test
 
 #<input type="checkbox" name="fields[]" value="ME536959__(±)10(11)-EpDPA" multiple="">
@@ -28,4 +29,3 @@ def main(mb_url_t):
 
 t = main(mb_url_t)
 print (t)
-
