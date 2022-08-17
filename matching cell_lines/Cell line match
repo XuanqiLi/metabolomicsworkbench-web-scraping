@@ -1,0 +1,49 @@
+import pandas as pd
+
+def getExcel():
+    df = pd.read_excel('Output_Human.xlsx') #input file that need to be matched
+    studyID = df['Study ID'].tolist()
+    StudySummary = df['Study Summary'].tolist()
+    #print (StudySummary)
+    StudySummary = [str(x) for x in StudySummary]
+    StudySummary = [y.replace('-', ' ') for y in StudySummary]
+    StudySummary = [z.upper() for z in StudySummary]
+    StudySummary = [y.replace('(', ' ') for y in StudySummary]
+    StudySummary = [y.replace(')', ' ') for y in StudySummary]
+    #print(StudySummary)
+    return (studyID, StudySummary)
+
+def getExcel2():
+    df = pd.read_excel('word list.xlsx') #you can adjust word_list here
+    human_cell_line = df['Human Cell Line List'].tolist()
+    human_cell_line = [str(x) for x in human_cell_line]
+    human_cell_line = [y.replace('-',' ') for y in human_cell_line]
+    human_cell_line = [z.upper() for z in human_cell_line]
+    human_cell_line = [y.replace('(', ' ') for y in human_cell_line]
+    human_cell_line = [y.replace(')', ' ') for y in human_cell_line]
+    print (human_cell_line)
+    return (human_cell_line)
+
+
+def MatchCellLines(StudySummary, human_cell_line):
+    cell_line_list = []
+    #empty = ''
+    for i in StudySummary:
+        #print (i)
+        cell_line = ','.join(j for j in i.split() if j in human_cell_line)
+        cell_line_list.append(cell_line)
+    return (cell_line_list)
+
+
+def main():
+    (studyID, StudySummary) = getExcel()
+    human_cell_line = getExcel2()
+    #print (human_cell_line)
+    cell_line_list = MatchCellLines(StudySummary, human_cell_line)
+    print (cell_line_list)
+    output = pd.DataFrame(studyID, columns=['Study ID'])
+    output['Cell Line Match'] = pd.Series(cell_line_list)
+    output.to_excel('Cell Line Match.xlsx')
+    return (cell_line_list)
+
+main()
